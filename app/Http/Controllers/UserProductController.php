@@ -7,6 +7,7 @@ use App\Product;
 use App\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
+use JD\Cloudder\Facades\Cloudder;
 
 class UserProductController extends ApiController
 
@@ -72,15 +73,21 @@ class UserProductController extends ApiController
 
         ]);
 
+        
+        
+        
+        Cloudder::upload($request->image, null);
+        $image_url=Cloudder::show(Cloudder::getPublicId());
 
-
+    
         $data = $request->only(['name','quantity','description','price']);
 
-        $file_name=$request->image->getClientOriginalName();
+        // $file_name=$request->image->getClientOriginalName();
 
-        $location = $request->image->storeAs('',$file_name);
+        // $location = $request->image->storeAs('',$file_name);
 
-        $data['image']=asset($location);
+        // $data['image']=asset($location);
+        $data['image']=$image_url;
         
 
         $data['user_id']=$user;
