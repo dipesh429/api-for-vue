@@ -78,9 +78,9 @@ class UserProductController extends ApiController
 
         $file_name=$request->image->getClientOriginalName();
 
-        $location = $request->image->storeAs('img',$file_name);
+        $location = $request->image->storeAs('',$file_name);
 
-        $data['image']=asset("{$location}");
+        $data['image']=asset($location);
         
 
         $data['user_id']=$user;
