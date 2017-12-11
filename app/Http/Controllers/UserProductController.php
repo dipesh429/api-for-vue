@@ -80,7 +80,7 @@ class UserProductController extends ApiController
 
         $location = $request->image->storeAs('img',$file_name);
 
-        $data['image']=asset("storage/{$location}");
+        $data['image']=asset("{$location}");
         
 
         $data['user_id']=$user;
