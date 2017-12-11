@@ -167,7 +167,7 @@ class UserController extends ApiController
             $user->save();
 
             
-            return redirect('http://localhost:5000/signin');
+            return $this->success('you are successfully verified..go back to website and signin');
         }
 
         return $this->error('you cant be verified...wrong credentials');
