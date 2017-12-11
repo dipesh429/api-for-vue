@@ -46,12 +46,18 @@ class UserController extends ApiController
        $data['password'] = bcrypt($request->password);
        $data['verification_token'] = User::verification_token();
 
+       return DB::transaction(function() use ($data){
 
-       $user = User::create($data);
+        $user = User::create($data);
+        Mail::to($user)->send(new UserCreated($user));
+        return $this->success($user);
 
-       Mail::to($user)->send(new UserCreated($user));
+       });
 
-       return $this->success($user);
+       
+       
+
+       
 
 
     }
