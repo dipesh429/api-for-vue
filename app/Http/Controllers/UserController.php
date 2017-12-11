@@ -167,7 +167,7 @@ class UserController extends ApiController
             $user->save();
 
             // return $this->success('You are successfully verified');
-            return $this->redirect('http://localhost:5000/signin');
+            return redirect('http://localhost:5000/signin');
         }
 
 
