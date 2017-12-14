@@ -69,7 +69,7 @@ class UserProductController extends ApiController
                 'quantity'=> 'required|integer',
                 'description'=> 'required',
                 'price'=> 'required|integer',
-                'image' => 'required' 
+                'image' => 'required|image' 
 
         ]);
 
