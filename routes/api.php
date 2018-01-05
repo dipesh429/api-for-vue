@@ -13,29 +13,28 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('users/check/{email}', 'UserController@check');
-Route::get('users/verify/{code}', 'UserController@verify')->name('verify');
-Route::apiResource('users', 'UserController');
+Route::get('users', 'UserController@index');
+Route::post('users', 'UserController@store');
+Route::post('cars/{user}', 'CarController@store');
+
+Route::post('wastes/{user}', 'WasteController@store');
+Route::get('wastes', 'WasteController@index');
+Route::post('wastes/order/{waste}/{user}', 'WasteController@order');
+
+Route::get('cars/average/{user}/{week}', 'CarController@weekaverage');
+Route::get('cars/{user}/{week}/{day}', 'CarController@daywise');
+Route::get('cars/{user}/{week}', 'CarController@weekwise');
+// Route::get('cars/average/{user}/{week}', 'CarController@weekaverage');
+
+// Route::post('cars/{user}/{week}/{day}', 'CarController@store');
+Route::post('users/login', 'UserController@login');
 
 
+Route::get('users/put/{user}', 'UserController@put');
 
-Route::post('users/{user}/products', 'UserProductController@store');
-Route::get('users/{user}/seller', 'UserProductController@seller');
-Route::get('users/{user}/buyer', 'UserProductController@buyer');
+//reward
 
-Route::get('products/except/{id}', 'ProductController@products');
-Route::apiResource('products', 'ProductController');
-
-Route::post('products/{product}/categories', 'Product\ProductCategoryController@store');
-
-Route::get('categories/find/{category}', 'Category\CategoryController@find');
-Route::get('categories/{category}/products', 'Category\CategoryProductController@index');
-Route::get('categories/{category}/products/except/{id}', 'Category\CategoryProductController@exceptproducts');
-Route::apiResource('categories', 'Category\CategoryController');
-
-Route::post('buyers/{buyer}/products/{product}/transactions', 'Transaction\TransactionController@store');
-
-Route::apiResource('transactions','Transaction\TransactionController');
+Route::get('reward/{user}', 'RewardController@index');
 
 
 

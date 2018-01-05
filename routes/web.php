@@ -1,5 +1,10 @@
 <?php
 
+use App\Events\UserSigned;
+use Illuminate\Support\Facades\Redis;
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,5 +17,23 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+
+
+    // Redis::set('name','pyarii anjilaa');
+
+	$data=[
+
+		'name' => 'dipesh',
+		'sex' => 'male'
+
+	];
+
+    Redis::publish('private',$data);
+
+
+ 	// event(new UserSigned("dkccc"));	
+
+	return "hello";
+
 });

@@ -2,7 +2,9 @@
 
 namespace App;
 
+use App\Waste;
 use App\Product;
+use App\Transaction;
 use Laravel\Passport\HasApiTokens;
 use App\Transformers\UserTransformer;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -20,11 +22,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 
-        'email', 
         'password',
-        'verified',
-        'verification_token',
-        'admin'
+        'car-no',
+        'house-no',
+        'email'
+        
     ];
 
     /**
@@ -37,16 +39,9 @@ class User extends Authenticatable
         
     ];
 
+    public function wastes(){
 
-   
-    public static function verification_token(){
-
-        return str_random(40); //must be higher .......... so that it can't be brueteforced
-    }
-
-    public function products(){
-
-        return $this->HasMany(Product::class);
+        return $this->hasMany(Waste::class);
     }
 
     public function transactions(){
@@ -55,13 +50,6 @@ class User extends Authenticatable
     }
 
 
-
-    // public function getCreatedAtAttribute($value){
-
-     // return $value->diffForHumans();
-     // return $value->year;
-     // dd($value);
-    // }
-
+   
 
 }

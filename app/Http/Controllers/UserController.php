@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Transaction;
 use App\Mail\UserCreated;
 use Illuminate\Http\Request;
 use App\Mail\UserVerification;
@@ -21,8 +22,7 @@ class UserController extends ApiController
     public function index()
     {
         
-        $users = User::all();
-        return $this->success($users);
+       dd('helloo');
 
     }
 
@@ -38,144 +38,131 @@ class UserController extends ApiController
        $request->validate([
 
             'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed|min:6'
-       ]);
+            'email' => 'required|unique:users',
+            'password' => 'required|min:6',
+            'car-no' => 'required',
+            'house-no' => 'required',
 
-       $data=$request->only(['name','email']);
+        ]);
+
+       $data=$request->only(['name','car-no','house-no','email']);
        $data['password'] = bcrypt($request->password);
-       $data['verification_token'] = User::verification_token();
-
-       return DB::transaction(function() use ($data){
-
+      
+        // dd($data);    
         $user = User::create($data);
-        Mail::to($user)->send(new UserCreated($user));
+
+       
         return $this->success($user);
-
-       });
-
-       
-       
-
-       
-
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        return $this->success($user);
-
-        // return$user->created_at
-    }
-
     
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, User $user)
-    {
-    
-        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-    
-    }
 
-    // public function login(Request $request){
+    public function login(Request $request){
 
 
-    //     $request->validate([
+         $request->validate([
 
-    //         'email' => 'required|email',
-    //         'password' => 'required',
-            
-    //    ]);
+            'name' => 'required',
+            'password' => 'required'
 
-    //     $user = User::where('email',$request->email)->first();
-
-    //     if(!$user){
-
-    //         return $this->error('user with such email dont exist',422);
-
-    //     }
-
-    //     if($user && Hash::check($request->password,$user->password)){
-
-    //         return $this->success($user);
-    //     }
-
-    //     return $this->error('Password didnot match',422);
+        ]);
 
 
+         $user=User::where('name',$request->name)->first();
 
-    // }
+         if($user){
+
+           if (Hash::check($request->password, $user->password)) {
+                    
+                   return $this->success($user) ;
+                }
+           else{
+
+                     return $this->error('Password dont match',404);
+           }}  
+
+           return $this->error('Username dont exist',404);
+         }
+
+//no. of sold no. by this user
+
+         public function sold(){
 
 
-    public function check($email){
-
-
-
-        $user=User::where('email',$email)->first();
-
-        if($user){
-
-             if($user->verified==1){
-
-                return $this->success($user);
-             }
-
-             else{
-
-                return $this->error("You are not a verified user. First verify your email. Email Confirmation was sent to your email when you signup earlier",415);
-             }
-        }
-
-        else{
-
-            return $this->error('User with this email donot exist',415);
-        }
-    }
-
-    public function verify(Request $request){
-
-        $user=User::where('verification_token',$request->code)->first();
-
-        if($user){
-
-            $user->verification_token='';
-            $user->verified=1;
-            $user->save();
+            $login_id = request()->user;
+            $user = User::find($login_id);
 
             
-            return $this->success('you are successfully verified..go back to website and signin');
-        }
+            $wastes = $user->wastes->pluck('id');
 
-        return $this->error('you cant be verified...wrong credentials');
+            // return $wastes;
 
+            $c=0;
+            // $transaction=
+
+            foreach($wastes as $waste){
+                 $trans = Transaction::where('waste_id',$waste)->get();
+                 if(count($trans)){
+                     $c= $c+1;
+                 }
+
+                } 
+            
+
+          return $c;
+
+
+         }
+
+
+
+       //no. of buy by this user
+
+         public function buy(){
+
+
+            $login_id = request()->user;
+            $user = User::find($login_id);
+
+            $users=$user->transactions;
+
+            return count($users);
+
+         }
+
+
+          //no. of put by this user
+
+         public function put(){
+
+
+            $login_id = request()->user;
+            $user = User::find($login_id);
+
+            $users=$user->wastes;
+
+            return count($users);
+
+         }
+
+
+
+ 
 
         
+
+
+
+
+
+
+
     }
 
 
 
-}
+
+
+
+    
